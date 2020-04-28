@@ -65,7 +65,8 @@ app.get('/scripts/:apiKey/:scriptId', async (req, res) => {
   if (!hasAccess) {
     res.send({
       status: false,
-      response: 'Invalid Key - Contact support@scriptomatics.com'
+      response:
+        'This API Key doesnt have access to this script - Double check and try again. Still an issue? Contact support@scriptomatics.com with this Error'
     })
     return
   } else if (!req.get('user-agent').includes('Google-Apps-Script')) {
@@ -80,8 +81,13 @@ app.get('/scripts/:apiKey/:scriptId', async (req, res) => {
     return script.id == scriptId
   })
 
-  console.log('Script Delivered:', scriptId, apiKey ) 
-  res.send(scriptContent.getScriptContent())
+
+  console.log('Script Delivered:', scriptId, apiKey)
+  res.send({
+    status: true,
+    response: `Script Loaded - ${scriptContent.name}`,
+    scriptContent: scriptContent.getScriptContent()
+  })
 })
 
 app.listen(port, () => {
