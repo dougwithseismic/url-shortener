@@ -85,7 +85,7 @@ app.get('/scripts/:apiKey/:scriptId', async (req, res) => {
   console.log('Script Delivered:', scriptId, apiKey)
   res.send({
     status: true,
-    response: `Script Loaded - ${scriptContent.name}`,
+    response: `Script Loaded! - ${scriptContent.name} v${scriptContent.version} - Go get 'em!`,
     scriptContent: scriptContent.getScriptContent()
   })
 })

@@ -1,6 +1,7 @@
 const options = {
   id: 1,
-  name: 'Ad Copy Upgrader'
+  name: 'Ad Copy Upgrader',
+  version: '1.0.0'
 }
 
 const getScriptContent = () => {
