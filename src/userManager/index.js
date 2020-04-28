@@ -27,6 +27,10 @@ const init = () => {
 
     return userContainer
   })
+
+  eventBus.on('createCustomer', (customerDetails) => {
+    createUser(customerDetails)
+  })
 }
 
 const findUser = async (query, value) => {
@@ -55,10 +59,24 @@ const createUser = async (user) => {
     bcrypt.hash(user.password, saltRounds, (err, hash) => {
       // Store hash in your password DB.
       user.password = hash
-      db.collection('users').add({ ...userProfile, ...user }).then(async (ref) => {
-        userContainer = await ref.get()
-        eventBus.emit('createApiKey', userContainer.data().token)
-      })
+      try {
+        db
+          .collection('users')
+          .add({
+            ...userProfile,
+            firstName: user.first_name,
+            lastName: user.last_name,
+            email: user.email,
+            token: user.token,
+            cid: user.id // Shopify Customer Id. Int
+          })
+          .then(async (ref) => {
+            userContainer = await ref.get()
+            eventBus.emit('createApiKey', userContainer.data().token)
+          })
+      } catch (error) {
+        console.log('error :>> ', error)
+      }
     })
   }
   return userContainer

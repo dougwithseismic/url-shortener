@@ -3,6 +3,7 @@ import express from 'express'
 import cors from 'cors'
 import 'babel-polyfill'
 import chalk from 'chalk'
+import { eventBus } from './eventBus'
 
 import bodyParser from 'body-parser'
 
@@ -93,6 +94,7 @@ app.get('/scripts/:apiKey/:scriptId', async (req, res) => {
   })
 })
 
+// TODO: Emit eventBus 'createCustomer' event.
 app.post('/admin/createCustomer', async (req, res) => {
   const shopifyTopic = req.header('X-Shopify-Topic')
   if (shopifyTopic !== 'customers/create') {
@@ -100,10 +102,7 @@ app.post('/admin/createCustomer', async (req, res) => {
     return
   }
 
-  console.log('shopifyTopic :>> ', shopifyTopic)
-  console.log('req.body :>> ', req.body)
-  // req.body
-
+  eventBus.emit('createCustomer', req.body)
   res.send({ message: 'thanks' })
 })
 
