@@ -52,6 +52,8 @@ app.use(express.urlencoded({ extended: true }))
 
 // Serve Script + AUTH
 app.get('/scripts/:apiKey/:scriptId', async (req, res) => {
+
+  console.log(req.get('user-agent'))
   // 1. Check that API key is valid
   // 2. Check key has access to that script (and that request is coming from Google user-agent)
   // 3. Serve script
@@ -59,7 +61,6 @@ app.get('/scripts/:apiKey/:scriptId', async (req, res) => {
   const { apiKey } = req.params
   // !! Params are strings by default. fml 
   const scriptId = parseInt(req.params.scriptId)
-
   const hasAccess = await AccessManager.checkAccess(apiKey, scriptId)
 
   if (!hasAccess) {
