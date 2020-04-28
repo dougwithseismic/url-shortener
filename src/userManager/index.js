@@ -29,7 +29,9 @@ const init = () => {
   })
 
   eventBus.on('createCustomer', (customerDetails) => {
-    createUser(customerDetails)
+    createUser(customerDetails).then(() => {
+      console.log('USER CRATED')
+    })
   })
 }
 
@@ -53,7 +55,7 @@ const createUser = async (user) => {
     return existingUser[0]
   } else {
     console.log('User not found: Creating User', user.email)
-    user.token = uuidAPIKey.create({ noDashes: true })
+    user.token = uuidAPIKey.create({ noDashes: false })
 
     const saltRounds = 5
     bcrypt.hash(user.password, saltRounds, (err, hash) => {

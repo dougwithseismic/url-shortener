@@ -1,23 +1,17 @@
+import sgMail from '@sendgrid/mail'
+
 const test = () => {
-  var helper = require('sendgrid').mail
-  var from_email = new helper.Email('test@example.com')
-  var to_email = new helper.Email('doug@withseismic.com')
-  var subject = 'Hello World from the SendGrid Node.js Library!'
-  var content = new helper.Content('text/plain', 'Hello, Email!')
-  var mail = new helper.Mail(from_email, subject, to_email, content)
-
-  var sg = require('sendgrid')(process.env.SENDGRID_API_KEY)
-  var request = sg.emptyRequest({
-    method: 'POST',
-    path: '/v3/mail/send',
-    body: mail.toJSON()
-  })
-
-  sg.API(request, function(error, response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+  const msg = {
+    to: 'doug@withseismic.com',
+    from: 'doug@scriptomatics.com',
+    templateId: 'd-fe30a1c5cbb34efbbbfe69ed9e45e3e8',
+    dynamic_template_data: {
+      name: 'Doug',
+      apiKey: 'EC2PCS-HQHMMY-WGM662-XHG1JQ-WZ34'
+    }
+  }
+  sgMail.send(msg)
 }
 
 export const CommsManager = {
