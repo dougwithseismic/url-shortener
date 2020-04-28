@@ -10,9 +10,11 @@ import bodyParser from 'body-parser'
 import { scriptLibrary } from './scriptManager/'
 import { UserManager } from './userManager'
 import { AccessManager } from './accessManager'
+import { CommsManager } from './commsManager'
 import fs from 'fs'
 
 UserManager.init()
+// CommsManager.test()
 
 /*
 

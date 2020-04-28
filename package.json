@@ -21,6 +21,7 @@
     "firebase-admin": "^8.11.0",
     "nodemon": "^1.19.3",
     "require-directory": "^2.1.1",
+    "sendgrid": "^5.2.3",
     "uuid-apikey": "^1.4.6"
   },
   "engines": {
