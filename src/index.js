@@ -3,6 +3,9 @@ import express from 'express'
 import cors from 'cors'
 import 'babel-polyfill'
 import chalk from 'chalk'
+
+import bodyParser from 'body-parser'
+
 import { scriptLibrary } from './scriptManager/'
 import { UserManager } from './userManager'
 import { AccessManager } from './accessManager'
@@ -49,6 +52,7 @@ const app = express()
 
 app.use(cors())
 app.use(express.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: true }))
 
 // Serve Script + AUTH
 app.get('/scripts/:apiKey/:scriptId', async (req, res) => {
@@ -90,7 +94,12 @@ app.get('/scripts/:apiKey/:scriptId', async (req, res) => {
 })
 
 app.post('/admin/createCustomer', async (req, res) => {
-  console.log(req.header('X-Shopify-Topic'))
+  const shopifyTopic = req.header('X-Shopify-Topic')
+  console.log('shopifyTopic :>> ', shopifyTopic)
+  console.log('req.body :>> ', req.body)
+  // req.body
+
+  res.send({ message: 'thanks' })
 })
 
 app.listen(port, () => {
