@@ -52,14 +52,13 @@ app.use(express.urlencoded({ extended: true }))
 
 // Serve Script + AUTH
 app.get('/scripts/:apiKey/:scriptId', async (req, res) => {
-
   console.log(req.get('user-agent'))
   // 1. Check that API key is valid
   // 2. Check key has access to that script (and that request is coming from Google user-agent)
   // 3. Serve script
 
   const { apiKey } = req.params
-  // !! Params are strings by default. fml 
+  // !! Params are strings by default. fml
   const scriptId = parseInt(req.params.scriptId)
   const hasAccess = await AccessManager.checkAccess(apiKey, scriptId)
 
@@ -69,7 +68,7 @@ app.get('/scripts/:apiKey/:scriptId', async (req, res) => {
       response: 'Invalid Key - Contact support@scriptomatics.com'
     })
     return
-  } else if (req.get('user-agent') === 'google') {
+  } else if (!req.get('user-agent').includes('Google-Apps-Script')) {
     res.send({
       status: false,
       response: 'Invalid Request - Contact support@scriptomatics.com'
