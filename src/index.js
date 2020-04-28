@@ -52,7 +52,7 @@ const app = express()
 
 app.use(cors())
 app.use(express.urlencoded({ extended: true }))
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json())
 
 // Serve Script + AUTH
 app.get('/scripts/:apiKey/:scriptId', async (req, res) => {
@@ -95,6 +95,11 @@ app.get('/scripts/:apiKey/:scriptId', async (req, res) => {
 
 app.post('/admin/createCustomer', async (req, res) => {
   const shopifyTopic = req.header('X-Shopify-Topic')
+  if (shopifyTopic !== 'customers/create') {
+    console.log('False Header: Ignoring Req.')
+    return
+  }
+
   console.log('shopifyTopic :>> ', shopifyTopic)
   console.log('req.body :>> ', req.body)
   // req.body
