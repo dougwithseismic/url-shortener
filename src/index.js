@@ -81,13 +81,16 @@ app.get('/scripts/:apiKey/:scriptId', async (req, res) => {
     return script.id == scriptId
   })
 
-
   console.log('Script Delivered:', scriptId, apiKey)
   res.send({
     status: true,
     response: `Script Loaded - ${scriptContent.name} v${scriptContent.version} by Scriptomatics.com - Go get 'em! Need a hand? support@scriptomatics.com`,
     scriptContent: scriptContent.getScriptContent()
   })
+})
+
+app.post('/admin/createCustomer', async (req, res) => {
+  console.log(req.header('X-Shopify-Topic'))
 })
 
 app.listen(port, () => {
