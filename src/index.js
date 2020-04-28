@@ -11,10 +11,11 @@ import { scriptLibrary } from './scriptManager/'
 import { UserManager } from './userManager'
 import { AccessManager } from './accessManager'
 import { CommsManager } from './commsManager'
-import fs from 'fs'
 
+// Loads event listeners. Probably not the best place for it.
 UserManager.init()
-// CommsManager.test()
+CommsManager.init()
+AccessManager.init()
 
 /*
 
@@ -103,6 +104,36 @@ app.post('/admin/createCustomer', async (req, res) => {
     console.log('False Header: Ignoring Req.')
     return
   }
+
+  /*
+
+{
+    id: 706405506930370084,
+    email: 'bob@biller.com',
+    accepts_marketing: true,
+    created_at: null,
+    updated_at: null,
+    first_name: 'Bob',
+    last_name: 'Biller',
+    orders_count: 0,
+    state: 'disabled',
+    total_spent: '0.00',
+    last_order_id: null,
+    note: 'This customer loves ice cream',
+    verified_email: true,
+    multipass_identifier: null,
+    tax_exempt: false,
+    phone: null,
+    tags: '',
+    last_order_name: null,
+    currency: 'USD',
+    addresses: [],
+    accepts_marketing_updated_at: null,
+    marketing_opt_in_level: null,
+    admin_graphql_api_id: 'gid://shopify/Customer/706405506930370084'
+  }
+
+*/
 
   eventBus.emit('createCustomer', req.body)
   res.send({ message: 'thanks' })

@@ -27,13 +27,6 @@ const grantAccess = async (uuid, scriptId, duration) => {
 
 // EVENT LISTENERS
 
-// eventBus.on('createApiKey', async (token) => {
-//   console.log('Creating New API Key:', token.apiKey)
-//   await db.collection('apiKeys').doc(token.uuid).set({ ...token, access: [] }).then(() => {
-//     console.log(chalk.green('API Key Created:', token.uuid))
-//   })
-// })
-
 const checkAccess = async (tokenValue, scriptId, tokenType = 'apiKey') => {
   const sessions = await db
     .collection('sessions')
@@ -52,39 +45,42 @@ const checkAccess = async (tokenValue, scriptId, tokenType = 'apiKey') => {
   return sessions.length > 0 ? sessions[0] : null
 }
 
-eventBus.on('grantAccess', async (apiKey, scriptId, duration) => {
-  // Check whether API key has an access session already -if it does, add the duration (days). If not, create a new session.
-  const sessions = await checkAccess(apiKey, scriptId)
-  const getToken = await UserManager.getTokenFromApiKey(apiKey)
+const init = () => {
+  eventBus.on('grantAccess', async (apiKey, scriptId, duration) => {
+    // Check whether API key has an access session already -if it does, add the duration (days). If not, create a new session.
+    const sessions = await checkAccess(apiKey, scriptId)
+    const getToken = await UserManager.getTokenFromApiKey(apiKey)
 
-  if (!getToken) {
-    console.log(chalk.red('API Key not found - Cannot grant access'))
-    return
-  }
+    if (!getToken) {
+      console.log(chalk.red('API Key not found - Cannot grant access'))
+      return
+    }
 
-  if (sessions) {
-    let currentExpiry = sessions.data.accessExpires.toDate()
-    let accessExpires = new Date(currentExpiry.setDate(currentExpiry.getDate() + duration + 1))
-    accessExpires.setHours(0, 0, 0, 0)
-    db.collection('sessions').doc(sessions.id).update({ accessExpires }).then(() => {
-      console.log(`Added ${duration} days to time - New session Expiration`, accessExpires)
-    })
-  } else {
-    // Create the session with a set duration
-    let d = new Date()
-    d.setDate(d.getDate() + duration + 1)
-    d.setHours(0, 0, 0, 0)
+    if (sessions) {
+      let currentExpiry = sessions.data.accessExpires.toDate()
+      let accessExpires = new Date(currentExpiry.setDate(currentExpiry.getDate() + duration + 1))
+      accessExpires.setHours(0, 0, 0, 0)
+      db.collection('sessions').doc(sessions.id).update({ accessExpires }).then(() => {
+        console.log(`Added ${duration} days to time - New session Expiration`, accessExpires)
+      })
+    } else {
+      // Create the session with a set duration
+      let d = new Date()
+      d.setDate(d.getDate() + duration + 1)
+      d.setHours(0, 0, 0, 0)
 
-    db
-      .collection('sessions')
-      .add({ scriptId, accessExpires: d, token: getToken })
-      .then(() =>
-        console.log(chalk.greenBright(`Granted ${getToken.apiKey} access to ${scriptId} for ${duration} days`))
-      )
-  }
-})
+      db
+        .collection('sessions')
+        .add({ scriptId, accessExpires: d, token: getToken })
+        .then(() =>
+          console.log(chalk.greenBright(`Granted ${getToken.apiKey} access to ${scriptId} for ${duration} days`))
+        )
+    }
+  })
+}
 
 export const AccessManager = {
+  init,
   nukeAccess,
   grantAccess,
   checkAccess

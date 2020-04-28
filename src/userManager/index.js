@@ -28,10 +28,8 @@ const init = () => {
     return userContainer
   })
 
-  eventBus.on('createCustomer', (customerDetails) => {
-    createUser(customerDetails).then(() => {
-      console.log('USER CRATED')
-    })
+  eventBus.on('createCustomer', async (customerDetails) => {
+    await createUser(customerDetails).then((user) => {})
   })
 }
 
@@ -52,7 +50,7 @@ const createUser = async (user) => {
 
   if (existingUser) {
     console.log(chalk.red('User Already Exists: Skipping creation'))
-    return existingUser[0]
+    return existingUser
   } else {
     console.log('User not found: Creating User', user.email)
     user.token = uuidAPIKey.create({ noDashes: false })
@@ -74,7 +72,7 @@ const createUser = async (user) => {
           })
           .then(async (ref) => {
             userContainer = await ref.get()
-            eventBus.emit('createApiKey', userContainer.data().token)
+            eventBus.emit('sendApiKeyToUser', userContainer.data())
           })
       } catch (error) {
         console.log('error :>> ', error)
