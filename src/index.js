@@ -80,6 +80,7 @@ app.get('/scripts/:apiKey/:scriptId', async (req, res) => {
     return script.id == scriptId
   })
 
+  console.log('Script Delivered:', scriptId, apiKey ) 
   res.send(scriptContent.getScriptContent())
 })
 
