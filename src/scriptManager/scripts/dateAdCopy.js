@@ -1,6 +1,6 @@
 const options = {
     id: 3,
-    name: 'CTR Magnet - Date in AdCopy',
+    name: 'CTR Magnet - Include the date in AdCopy',
     version: '1.0.1',
     platform: 'Google Ads',
     type: 'Script', 
@@ -9,13 +9,22 @@ const options = {
     Dynamically Insert Today's Date, Day, Month, Year etc into adcopy using {=Date. ...}
     
     Setup: 
-    1. Change offsetHour to the difference between your timezone and GMT - 7. 
-    Eg If you're in Central European Time (GMT+2), set offsetHour to 9. If you're in -9, set offsetHour to -2.
+   
+    1. Set script to run Daily at 00:00
+    2: Run script once to create data feed (Check Business Data > Data Feeds > Date) AND CHECK YOUR ACCOUNT IS RUNNING IN THE RIGHT TIMEZONE.
+
+    FAQ - 
     
-    2: Set script to run Daily at 00:00
-    
-    3: Run script once to create data feed. (Check Business Data > Data Feeds > Date)
-    
+    Q.'According to the Log, My timezone wrong... How do I fix this?'
+    A. By default, scripts run at America/Los_Angeles (Pacific time) - to make scripts run at your accounts local timezone, 
+    this script grabs the timezone of the account running the script. If this account setting has been set up incorrectly, the timing used might be off by as much as 12 hours!
+
+    To fix, add the following line, where x is the correct timezone, as found in this link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+    var realTimezone = ''
+
+    (https://developers.google.com/google-ads/scripts/docs/features/dates)
+
+
     Author: Doug Silkstone - doug@withseismic.com
     Codealong: https://www.twitch.tv/videos/599249260
     
