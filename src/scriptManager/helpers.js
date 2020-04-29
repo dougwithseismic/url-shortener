@@ -1,6 +1,6 @@
+// TODO: Different templates for requiring spreadsheet urls and options etc.
 export const generateLoader = (apiKey, script, user) => {
-  return `
-/* 
+  return `/* 
 SCRIPTOMATICS.COM - PREMIUM GOOGLE ADS SCRIPTS & AUTOMATION
 For ${user.firstName} ${user.lastName} - ${user.email}
 ${script.name}

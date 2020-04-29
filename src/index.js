@@ -77,12 +77,6 @@ app.get('/scripts/:apiKey/:scriptId', async (req, res) => {
         'This API Key doesnt have access to this script - Double check and try again. Still an issue? Contact support@scriptomatics.com with this Error'
     })
     return
-  } else if (!req.get('user-agent').includes('Google-Apps-Script')) {
-    res.send({
-      status: false,
-      response: 'Invalid Request - Contact support@scriptomatics.com'
-    })
-    return
   }
 
   const scriptContent = scriptLibrary.find((script) => {

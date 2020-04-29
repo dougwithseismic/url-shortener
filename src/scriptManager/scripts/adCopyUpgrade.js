@@ -3,7 +3,8 @@ const options = {
   name: 'Ad Copy Upgrader',
   version: '1.0.0',
   platform: 'Google Ads',
-  type: 'Script'
+  type: 'Script',
+  setupInstructions: `Here's where you'll put a quick set of instruction in plaintext for others to follow`
 }
 
 const getScriptContent = () => {

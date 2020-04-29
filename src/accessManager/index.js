@@ -61,6 +61,18 @@ const checkAccess = async (tokenValue, scriptId, tokenType = 'apiKey') => {
       })
     )
 
+  const checked = sessions.length > 0 ? sessions[0] : null
+  if (!checked) {
+    return null
+  }
+
+  let now = new Date()
+  let expiry = checked.data.accessExpires.toDate()
+
+  if (now > expiry) {
+    return null
+  }
+
   return sessions.length > 0 ? sessions[0] : null
 }
 
@@ -95,7 +107,6 @@ const grantAccessOnOrder = async (order) => {
   // https://github.com/sendgrid/email-templates/blob/master/dynamic-templates/receipt/receipt.html
 
   console.log(chalk.greenBright('Access Granted: Emailing Customer', customer.id))
-
 
   const fullDetails = productBucket.map((product) => {
     const scriptDetails = ScriptManager.getScriptDetailsFromId(product.id)
