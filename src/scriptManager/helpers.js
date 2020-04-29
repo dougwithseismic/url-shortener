@@ -1,8 +1,9 @@
-export const generateLoader = (apiKey, script) => {
+export const generateLoader = (apiKey, script, user) => {
   return `
 /* 
 SCRIPTOMATICS.COM - PREMIUM GOOGLE ADS SCRIPTS & AUTOMATION
-${script.name} - ${script.description}
+For ${user.firstName} ${user.lastName} - ${user.email}
+${script.name}
 Platform: ${script.platform}
 
 Author: Doug Silkstone
@@ -30,4 +31,3 @@ function scriptomaticLoader() {
 }
 `
 }
-

@@ -492,7 +492,7 @@ app.get('/downloads/scripts/:customerId/:apiKey/:scriptId', async (req, res) => 
   }
 
   res.set({ 'Content-Disposition': `attachment; filename="Scriptomatics - ${scriptDetails.name}.txt"` })
-  res.send(ScriptManager.generateLoader(apiKey, scriptDetails))
+  res.send(ScriptManager.generateLoader(apiKey, scriptDetails, userDetails))
 })
 
 app.listen(port, () => {
