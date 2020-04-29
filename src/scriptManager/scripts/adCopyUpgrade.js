@@ -7,9 +7,7 @@ const options = {
 }
 
 const getScriptContent = () => {
-  return `const main = () => {
-    console.log('main')
-  }`
+  return `Logger.log("IM HERE TO UPGRADE YOU")`
 }
 
 module.exports = {
