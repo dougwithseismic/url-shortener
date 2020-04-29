@@ -130,6 +130,18 @@ const getTokenFromApiKey = async (apiKey) => {
   return token.length > 0 ? token[0].token : null
 }
 
+const getTokenFromCid = async (cid) => {
+  console.log('Getting Token from Customer Id:', cid)
+
+  const token = await db
+    .collection('users')
+    .where('cid', '==', cid)
+    .get()
+    .then((snapshot) => snapshot.docs.map((doc) => doc.data()))
+
+  return token.length > 0 ? token[0].token : null
+}
+
 export const UserManager = {
   init,
   createUser,
@@ -137,5 +149,6 @@ export const UserManager = {
   updateUser,
   nukeUsers,
   generateNewTokenForUser,
-  getTokenFromApiKey
+  getTokenFromApiKey,
+  getTokenFromCid
 }
