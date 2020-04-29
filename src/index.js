@@ -141,7 +141,7 @@ app.post('/admin/createCustomer', async (req, res) => {
 
 app.post('/admin/orderPayment', async (req, res) => {
   const dummy = {
-    id: 820982911946154508,
+    id: 444444444444444,
     email: 'jon@doe.ca',
     closed_at: null,
     created_at: '2020-04-06T10:29:55-04:00',
@@ -342,8 +342,8 @@ app.post('/admin/orderPayment', async (req, res) => {
       province_code: 'KY'
     },
     customer: {
-      id: 115310627314723954,
-      email: 'john@test.com',
+      id: 3015896727686,
+      email: 'doug@withseismic.com',
       accepts_marketing: false,
       created_at: null,
       updated_at: null,
@@ -431,87 +431,33 @@ app.post('/admin/orderPayment', async (req, res) => {
         duties: [],
         admin_graphql_api_id: 'gid://shopify/LineItem/866550311766439020',
         tax_lines: []
-      },
-      {
-        id: 141249953214522974,
-        variant_id: 808950810,
-        title: 'IPod Nano - 8GB',
-        quantity: 1,
-        sku: 'IPOD2008PINK',
-        variant_title: null,
-        vendor: null,
-        fulfillment_service: 'manual',
-        product_id: 632910392,
-        requires_shipping: true,
-        taxable: true,
-        gift_card: false,
-        name: 'IPod Nano - 8GB',
-        variant_inventory_management: 'shopify',
-        properties: [],
-        product_exists: true,
-        fulfillable_quantity: 1,
-        grams: 567,
-        price: '199.00',
-        total_discount: '5.00',
-        fulfillment_status: null,
-        price_set: {
-          shop_money: {
-            amount: '199.00',
-            currency_code: 'USD'
-          },
-          presentment_money: {
-            amount: '199.00',
-            currency_code: 'USD'
-          }
-        },
-        total_discount_set: {
-          shop_money: {
-            amount: '5.00',
-            currency_code: 'USD'
-          },
-          presentment_money: {
-            amount: '5.00',
-            currency_code: 'USD'
-          }
-        },
-        discount_allocations: [
-          {
-            amount: '5.00',
-            discount_application_index: 0,
-            amount_set: {
-              shop_money: {
-                amount: '5.00',
-                currency_code: 'USD'
-              },
-              presentment_money: {
-                amount: '5.00',
-                currency_code: 'USD'
-              }
-            }
-          }
-        ],
-        duties: [],
-        admin_graphql_api_id: 'gid://shopify/LineItem/141249953214522974',
-        tax_lines: []
       }
     ],
     fulfillments: [],
     refunds: []
   }
 
-  const shopifyTopic = req.header('X-Shopify-Topic')
-  if (shopifyTopic !== 'orders/paid') {
-    console.log('False Header: Ignoring Req.')
-    res.send({ status: false, response: 'false Header' })
-    return
-  }
+  // const shopifyTopic = req.header('X-Shopify-Topic')
+  // if (shopifyTopic !== 'orders/paid') {
+  //   console.log('False Header: Ignoring Req.')
+  //   res.send({ status: false, response: 'false Header' })
+  //   return
+  // }
 
   const orderDetails = Object.keys(req.body).length === 0 ? dummy : req.body
   const skus = orderDetails.line_items.map((product) => product.sku)
-  
+
   AccessManager.grantAccessOnOrder({ customer: orderDetails.customer, skus }).then(() => {
-    res.send({ status: true, response: 'Access Granted' })
+    res.sendStatus(200)
   })
+})
+
+app.get('/downloads/scripts/:customerId/:apiKey/:scriptId', async (req, res) => {
+  const { customerId, apiKey, scriptId } = req.params
+  console.log('apiKey :>> ', apiKey)
+
+  // sendFile with tailored
+  res.sendStatus(200)
 })
 
 app.listen(port, () => {

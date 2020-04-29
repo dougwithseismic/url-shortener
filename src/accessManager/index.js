@@ -4,6 +4,8 @@ import chalk from 'chalk'
 
 import { skuMap } from './skuMap'
 import { eventBus } from '../eventBus'
+import { CommsManager } from '../commsManager/index.js'
+import { ScriptManager } from '../scriptManager/index.js'
 
 const db = initFirebase()
 
@@ -26,7 +28,7 @@ const grantAccess = async (apiKey, scriptId, duration) => {
     let currentExpiry = sessions.data.accessExpires.toDate()
     let accessExpires = new Date(currentExpiry.setDate(currentExpiry.getDate() + duration + 1))
     accessExpires.setHours(0, 0, 0, 0)
-    db.collection('sessions').doc(sessions.id).update({ accessExpires }).then(() => {
+    await db.collection('sessions').doc(sessions.id).update({ accessExpires }).then(() => {
       console.log(`Added ${duration} days of access to script ${scriptId} - New session Expiration`, accessExpires)
     })
   } else {
@@ -35,7 +37,7 @@ const grantAccess = async (apiKey, scriptId, duration) => {
     d.setDate(d.getDate() + duration + 1)
     d.setHours(0, 0, 0, 0)
 
-    db
+    await db
       .collection('sessions')
       .add({ scriptId, accessExpires: d, token: getToken })
       .then(() =>
@@ -63,41 +65,64 @@ const checkAccess = async (tokenValue, scriptId, tokenType = 'apiKey') => {
 }
 
 const grantAccessOnOrder = async (order) => {
-  /*
-      When an order payment is processed, let's look at each item in that order and grant the customer access to those scripts.
-      Products:
-      
-      - Single Script
-      - Full Package - Everything
-      - Account Shells
-      - 
+  const customer = order.customer
+  console.log(chalk.greenBright('Processing Order', order.id))
 
-     */
-
-  try {
-    const customer = order.customer
-    console.log(chalk.greenBright('Processing Order', order.id))
-
-    let token = await UserManager.getTokenFromCid(3015896727686)
-    if (!token) {
-      console.log(chalk.redBright('No Token found for user', customer.id))
-      return
-    }
-    // Map SKU to scripts, then grant access to the customer
-    for (const orderSku of order.skus) {
-      const sku = skuMap.map.find((item) => item.sku == orderSku)
-      if (sku == undefined) {
-        console.log('Error: SKU Not Found!')
-        return false
-      }
-
-      for (const scriptId of sku.scripts) {
-        await grantAccess(token.apiKey, scriptId, sku.duration)
-      }
-    }
-  } catch (error) {
-    console.log('error :>> ', error)
+  let token = await UserManager.getTokenFromCid(customer.id)
+  if (!token) {
+    console.log(chalk.redBright('No Token found for user - Does user exist?', customer.id))
+    return
   }
+  // Map SKU to scripts, then grant access to the customer
+
+  let productBucket = []
+
+  for (const orderSku of order.skus) {
+    const sku = skuMap.map.find((item) => item.sku == orderSku)
+    if (sku == undefined) {
+      console.log('Error: SKU Not Found!')
+      return false
+    }
+
+    for (const scriptId of sku.scripts) {
+      // Grant access to each script in the order...
+      productBucket.push({ id: scriptId, duration: sku.duration })
+      await grantAccess(token.apiKey, scriptId, sku.duration)
+    }
+  }
+
+  // ... then email a confirmation to customer!
+  // https://github.com/sendgrid/email-templates/blob/master/dynamic-templates/receipt/receipt.html
+
+  console.log(chalk.greenBright('Access Granted: Emailing Customer', customer.id))
+  console.log('productBucket :>> ', productBucket)
+
+  const fullDetails = productBucket.map((product) => {
+    const scriptDetails = ScriptManager.getScriptDetailsFromId(product.id)
+    delete scriptDetails.getScriptContent // Don't go breaking my heart
+
+    return {
+      ...scriptDetails,
+      duration: product.duration,
+      downloadLink: `https://auth.scriptomatics.com/downloads/scripts/${token.apiKey}/${product.id}`
+    }
+  })
+
+  const payload = {
+    to: customer.email,
+    from: {
+      email: 'doug@scriptomatics.com',
+      name: 'Doug at Scriptomatics.com'
+    },
+    templateId: 'd-d75fd6623ee9414e85285c0b7ccb8485',
+    dynamic_template_data: {
+      customer: { firstName: customer.first_name, lastName: customer.last_name },
+      apiKey: token.apiKey,
+      items: fullDetails
+    }
+  }
+
+  CommsManager.sendTemplate(payload, customer)
 }
 
 const init = () => {
