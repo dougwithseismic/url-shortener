@@ -27,7 +27,7 @@ const grantAccess = async (apiKey, scriptId, duration) => {
     let accessExpires = new Date(currentExpiry.setDate(currentExpiry.getDate() + duration + 1))
     accessExpires.setHours(0, 0, 0, 0)
     db.collection('sessions').doc(sessions.id).update({ accessExpires }).then(() => {
-      console.log(`Added ${duration} days to time - New session Expiration`, accessExpires)
+      console.log(`Added ${duration} days of access to script ${scriptId} - New session Expiration`, accessExpires)
     })
   } else {
     // Create the session with a set duration
@@ -76,26 +76,23 @@ const grantAccessOnOrder = async (order) => {
 
   try {
     const customer = order.customer
+    console.log(chalk.greenBright('Processing Order', order.id))
+
     let token = await UserManager.getTokenFromCid(3015896727686)
     if (!token) {
       console.log(chalk.redBright('No Token found for user', customer.id))
       return
     }
     // Map SKU to scripts, then grant access to the customer
-
     for (const orderSku of order.skus) {
       const sku = skuMap.map.find((item) => item.sku == orderSku)
       if (sku == undefined) {
         console.log('Error: SKU Not Found!')
         return false
       }
-      
+
       for (const scriptId of sku.scripts) {
         await grantAccess(token.apiKey, scriptId, sku.duration)
-      }
-
-      if (sku !== undefined) {
-        // eventBus.emit('grantAccess', token.apiKey, sku, sku.duration)
       }
     }
   } catch (error) {

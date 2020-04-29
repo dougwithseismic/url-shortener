@@ -507,9 +507,11 @@ app.post('/admin/orderPayment', async (req, res) => {
   }
 
   const orderDetails = Object.keys(req.body).length === 0 ? dummy : req.body
-
   const skus = orderDetails.line_items.map((product) => product.sku)
-  AccessManager.grantAccessOnOrder({ customer: orderDetails.customer, skus })
+  
+  AccessManager.grantAccessOnOrder({ customer: orderDetails.customer, skus }).then(() => {
+    res.send({ status: true, response: 'Access Granted' })
+  })
 })
 
 app.listen(port, () => {
