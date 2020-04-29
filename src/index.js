@@ -7,7 +7,7 @@ import { eventBus } from './eventBus'
 
 import bodyParser from 'body-parser'
 
-import { scriptLibrary } from './scriptManager/'
+import { scriptLibrary, ScriptManager } from './scriptManager/'
 import { UserManager } from './userManager'
 import { AccessManager } from './accessManager'
 import { CommsManager } from './commsManager'
@@ -89,6 +89,14 @@ app.get('/scripts/:apiKey/:scriptId', async (req, res) => {
     return script.id == scriptId
   })
 
+  if (scriptContent == undefined) {
+    res.status(403).send({
+      status: false,
+      response: `Script Not found`
+    })
+    return
+  }
+
   console.log('Script Delivered:', scriptId, apiKey)
   res.send({
     status: true,
@@ -97,7 +105,6 @@ app.get('/scripts/:apiKey/:scriptId', async (req, res) => {
   })
 })
 
-// TODO: Emit eventBus 'createCustomer' event.
 app.post('/admin/createCustomer', async (req, res) => {
   const shopifyTopic = req.header('X-Shopify-Topic')
   if (shopifyTopic !== 'customers/create') {
@@ -452,12 +459,42 @@ app.post('/admin/orderPayment', async (req, res) => {
   })
 })
 
+// Delivers content
 app.get('/downloads/scripts/:customerId/:apiKey/:scriptId', async (req, res) => {
   const { customerId, apiKey, scriptId } = req.params
   console.log('apiKey :>> ', apiKey)
 
-  // sendFile with tailored
-  res.sendStatus(200)
+  // Check if API is legit
+  const token = await UserManager.getTokenFromApiKey(apiKey)
+  console.log('token :>> ', token)
+
+  if (!token) {
+    console.log('Download Attempt Failed: No Token Found on', apiKey)
+    res.status(403).send('Access Denied - Wrong API Key. Visit Scriptomatics.com')
+    return
+  }
+
+  // Get Customer Details (for loader customization)
+  const userDetails = await UserManager.findUser('cid', parseInt(customerId))
+  console.log('userDetails :>> ', userDetails)
+
+  if (!userDetails) {
+    console.log('Couldnt find user in DB -  Skipping Download')
+    res.status(403).send('Access Denied - support@Scriptomatics.com')
+    return
+  }
+
+  // Get Script Details
+  const scriptDetails = ScriptManager.getScriptDetailsFromId(scriptId)
+  console.log('scriptDetails :>> ', scriptDetails)
+
+  if (scriptDetails == undefined) {
+    console.log('Couldnt find script from scriptId')
+    res.status(403).send('Access Denied - Wrong Script Id. support@Scriptomatics.com')
+  }
+
+  res.set({ 'Content-Disposition': `attachment; filename="Scriptomatics - ${scriptDetails.name}.txt"` })
+  res.send(ScriptManager.generateLoader(apiKey, scriptDetails))
 })
 
 app.listen(port, () => {

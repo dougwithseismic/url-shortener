@@ -1,4 +1,5 @@
 import requireDirectory from 'require-directory'
+import { generateLoader } from './helpers'
 export const scriptLibrary = Object.values(requireDirectory(module, './scripts'))
 
 const getScriptDetailsFromId = (scriptId) => {
@@ -8,5 +9,6 @@ const getScriptDetailsFromId = (scriptId) => {
 }
 
 export const ScriptManager = {
-  getScriptDetailsFromId
+  getScriptDetailsFromId,
+  generateLoader
 }

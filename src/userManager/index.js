@@ -145,6 +145,7 @@ const getTokenFromCid = async (cid) => {
 export const UserManager = {
   init,
   createUser,
+  findUser,
   deleteUser,
   updateUser,
   nukeUsers,

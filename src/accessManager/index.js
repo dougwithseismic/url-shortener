@@ -104,7 +104,7 @@ const grantAccessOnOrder = async (order) => {
     return {
       ...scriptDetails,
       duration: product.duration,
-      downloadLink: `https://auth.scriptomatics.com/downloads/scripts/${token.apiKey}/${product.id}`
+      downloadLink: `https://auth.scriptomatics.com/downloads/scripts/${customer.id}/${token.apiKey}/${product.id}`
     }
   })
 
@@ -116,7 +116,7 @@ const grantAccessOnOrder = async (order) => {
     },
     templateId: 'd-d75fd6623ee9414e85285c0b7ccb8485',
     dynamic_template_data: {
-      customer: { firstName: customer.first_name, lastName: customer.last_name },
+      customer: { id: customer.id, firstName: customer.first_name, lastName: customer.last_name },
       apiKey: token.apiKey,
       items: fullDetails
     }
