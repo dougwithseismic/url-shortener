@@ -476,7 +476,6 @@ app.get('/downloads/scripts/:customerId/:apiKey/:scriptId', async (req, res) => 
 
   // Get Customer Details (for loader customization)
   const userDetails = await UserManager.findUser('cid', parseInt(customerId))
-  console.log('userDetails :>> ', userDetails)
 
   if (!userDetails) {
     console.log('Couldnt find user in DB -  Skipping Download')
@@ -486,7 +485,6 @@ app.get('/downloads/scripts/:customerId/:apiKey/:scriptId', async (req, res) => 
 
   // Get Script Details
   const scriptDetails = ScriptManager.getScriptDetailsFromId(scriptId)
-  console.log('scriptDetails :>> ', scriptDetails)
 
   if (scriptDetails == undefined) {
     console.log('Couldnt find script from scriptId')

@@ -95,7 +95,7 @@ const grantAccessOnOrder = async (order) => {
   // https://github.com/sendgrid/email-templates/blob/master/dynamic-templates/receipt/receipt.html
 
   console.log(chalk.greenBright('Access Granted: Emailing Customer', customer.id))
-  console.log('productBucket :>> ', productBucket)
+
 
   const fullDetails = productBucket.map((product) => {
     const scriptDetails = ScriptManager.getScriptDetailsFromId(product.id)
