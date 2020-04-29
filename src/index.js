@@ -140,13 +140,6 @@ app.post('/admin/createCustomer', async (req, res) => {
 })
 
 app.post('/admin/orderPayment', async (req, res) => {
-  // const shopifyTopic = req.header('X-Shopify-Topic')
-  // if (shopifyTopic !== 'orders/paid') {
-  //   console.log('False Header: Ignoring Req.')
-  //   res.send({ status: false, response: 'false Header' })
-  //   return
-  // }
-
   const dummy = {
     id: 820982911946154508,
     email: 'jon@doe.ca',
@@ -506,10 +499,14 @@ app.post('/admin/orderPayment', async (req, res) => {
     refunds: []
   }
 
-  const orderDetails = dummy
-  // const orderDetails = req.body
+  const shopifyTopic = req.header('X-Shopify-Topic')
+  if (shopifyTopic !== 'orders/paid') {
+    console.log('False Header: Ignoring Req.')
+    res.send({ status: false, response: 'false Header' })
+    return
+  }
 
-  console.log('orderDetails :>> ', orderDetails);
+  const orderDetails = Object.keys(req.body).length === 0 ? dummy : req.body
 
   const skus = orderDetails.line_items.map((product) => product.sku)
   AccessManager.grantAccessOnOrder({ customer: orderDetails.customer, skus })

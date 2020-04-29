@@ -1,10 +1,8 @@
 import { initFirebase } from '../firebaseAuth.js'
 import { UserManager } from './../userManager'
-import uuidAPIKey from 'uuid-apikey'
-import fbadmin from 'firebase-admin'
 import chalk from 'chalk'
 
-import skuMap from './skuMap.json'
+import { skuMap } from './skuMap'
 import { eventBus } from '../eventBus'
 
 const db = initFirebase()
@@ -91,8 +89,7 @@ const grantAccessOnOrder = async (order) => {
         console.log('Error: SKU Not Found!')
         return false
       }
-      console.log('sku :>> ', sku)
-
+      
       for (const scriptId of sku.scripts) {
         await grantAccess(token.apiKey, scriptId, sku.duration)
       }
