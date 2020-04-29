@@ -76,25 +76,33 @@ const grantAccessOnOrder = async (order) => {
 
      */
 
-  const customer = order.customer
-  let token = await UserManager.getTokenFromCid(3015896727686)
-  if (!token) {
-    console.log(chalk.redBright('No Token found for user', customer.id))
-    return
-  }
-  // Map SKU to scripts, then grant access to the customer
-
-  for (const orderSku of order.skus) {
-    const sku = skuMap.map.find((item) => item.sku == orderSku)
-    console.log('sku :>> ', sku)
-
-    for (const scriptId of sku.scripts) {
-      await grantAccess(token.apiKey, scriptId, sku.duration)
+  try {
+    const customer = order.customer
+    let token = await UserManager.getTokenFromCid(3015896727686)
+    if (!token) {
+      console.log(chalk.redBright('No Token found for user', customer.id))
+      return
     }
+    // Map SKU to scripts, then grant access to the customer
 
-    if (sku !== undefined) {
-      // eventBus.emit('grantAccess', token.apiKey, sku, sku.duration)
+    for (const orderSku of order.skus) {
+      const sku = skuMap.map.find((item) => item.sku == orderSku)
+      if (sku == undefined) {
+        console.log('Error: SKU Not Found!')
+        return false
+      }
+      console.log('sku :>> ', sku)
+
+      for (const scriptId of sku.scripts) {
+        await grantAccess(token.apiKey, scriptId, sku.duration)
+      }
+
+      if (sku !== undefined) {
+        // eventBus.emit('grantAccess', token.apiKey, sku, sku.duration)
+      }
     }
+  } catch (error) {
+    console.log('error :>> ', error)
   }
 }
 
