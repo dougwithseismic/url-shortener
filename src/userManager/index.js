@@ -72,7 +72,6 @@ const createUser = async (user) => {
           })
           .then(async (ref) => {
             userContainer = await ref.get()
-            eventBus.emit('sendApiKeyToUser', userContainer.data())
           })
       } catch (error) {
         console.log('error :>> ', error)

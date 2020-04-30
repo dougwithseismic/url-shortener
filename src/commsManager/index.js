@@ -4,6 +4,7 @@ import { eventBus } from './../eventBus'
 const init = () => {
   sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
+  // NOT USED - Sent apikey to user on customer create. Janky experience; could still be used as a reminder template.
   eventBus.on('sendApiKeyToUser', async (user) => {
     console.log('Sending API Key to Customer :>> ', user.cid)
     const msg = {
