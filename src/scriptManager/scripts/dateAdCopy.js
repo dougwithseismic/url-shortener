@@ -1,6 +1,6 @@
 const options = {
   id: 3,
-  name: 'CTR Magnet - Include the date in AdCopy',
+  name: 'CTR Magnet - Include Todays date in adcopy!',
   version: '1.0.1',
   platform: 'Google Ads',
   type: 'Script',
@@ -11,7 +11,7 @@ const options = {
     Setup: 
    
     1. Set script to run Daily at 00:00
-    2: Run script once to create data feed (Check Business Data > Data Feeds > Date) AND CHECK YOUR ACCOUNT IS RUNNING IN THE RIGHT TIMEZONE.
+    2: Run script once to create data feed (Check Business Data > Data Feeds > Date) AND CHECK THE SCRIPT LOGS TO MAKE SURE YOUR ACCOUNT IS RUNNING IN THE RIGHT TIMEZONE.
 
     FAQ - 
     
@@ -20,13 +20,9 @@ const options = {
     this script grabs the timezone of the account running the script. If this account setting has been set up incorrectly, the timing used might be off by as much as 12 hours!
 
     To fix, add the following line, where x is the correct timezone, as found in this link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-    var realTimezone = ''
+    var realTimezone = 'x'
 
     (https://developers.google.com/google-ads/scripts/docs/features/dates)
-
-
-    Author: Doug Silkstone - doug@withseismic.com
-    Codealong: https://www.twitch.tv/videos/599249260
     
     */`
 }

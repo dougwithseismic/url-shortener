@@ -444,12 +444,12 @@ app.post('/admin/orderPayment', async (req, res) => {
     refunds: []
   }
 
-  // const shopifyTopic = req.header('X-Shopify-Topic')
-  // if (shopifyTopic !== 'orders/paid') {
-  //   console.log('False Header: Ignoring Req.')
-  //   res.send({ status: false, response: 'false Header' })
-  //   return
-  // }
+  const shopifyTopic = req.header('X-Shopify-Topic')
+  if (shopifyTopic !== 'orders/paid') {
+    console.log('False Header: Ignoring Req.')
+    res.send({ status: false, response: 'false Header' })
+    return
+  }
 
   const orderDetails = Object.keys(req.body).length === 0 ? dummy : req.body
   const skus = orderDetails.line_items.map((product) => product.sku)
