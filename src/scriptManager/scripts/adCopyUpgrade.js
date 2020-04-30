@@ -4,7 +4,7 @@ const options = {
   version: '1.0.0',
   platform: 'Google Ads',
   type: 'Script',
-  setupInstructions: `Here's where you'll put a quick set of instruction in plaintext for others to follow`
+  setupInstructions: `/* Here's where you'll put a quick set of instruction in plaintext for others to follow */`
 }
 
 const getScriptContent = () => {

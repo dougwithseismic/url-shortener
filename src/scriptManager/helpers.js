@@ -9,11 +9,12 @@ Platform: ${script.platform}
 Author: Doug Silkstone
 Support: support@scriptomatics.com
 
-Setup:  ${script.setupInstructions}
 
 
 Scriptomatics.com
 */
+
+${script.setupInstructions}
 
 function main() {
   scriptomaticLoader() // Loads script from Scriptomatics Server
