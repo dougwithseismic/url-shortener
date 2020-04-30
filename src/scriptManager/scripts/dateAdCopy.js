@@ -39,7 +39,7 @@ const options = {
 const getScriptContent = () => {
   return `var realTimezone = 'Europe/Prague' 
 
-    function main() {
+    function runScript() {
       
       
         var checkTime = Utilities.formatDate(new Date(), AdWordsApp.currentAccount().getTimeZone(), "MMMM dd, yyyy HH:mm:ss Z")
@@ -163,7 +163,9 @@ const getScriptContent = () => {
       .getResult()
       
     
-    }    
+    }
+    
+    runScript()
       `
 }
 
