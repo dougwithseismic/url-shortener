@@ -6,12 +6,15 @@ const options = {
   type: 'Script',
   setupInstructions: `/* 
 
-    Dynamically Insert Today's Date, Day, Month, Year etc into adcopy using {=Date. ...}
+    Dynamically Insert Today's Date, Day, Month, Year etc into adcopy!  Great for CTR boosts.
+    
     
     Setup: 
    
     1. Set script to run Daily at 00:00
-    2: Run script once to create data feed (Check Business Data > Data Feeds > Date) AND CHECK THE SCRIPT LOGS TO MAKE SURE YOUR ACCOUNT IS RUNNING IN THE RIGHT TIMEZONE.
+    2. Run script once to create data feed (Check Business Data > Data Feeds > Date) AND CHECK THE SCRIPT LOGS TO MAKE SURE YOUR ACCOUNT IS RUNNING IN THE RIGHT TIMEZONE.
+    3. Use {=Date. ...} in your adcopy to dynamically include dates.
+    4. Report back on your CTR increases!
 
     FAQ - 
     
@@ -54,7 +57,7 @@ const getScriptContent = () => {
       Logger.log('---')
     
       
-      var dataFeed = grabDataSource('Date-newdate')
+      var dataFeed = grabDataSource('Date')
       var dateOptions = calcDate(0)
       
       if (typeof offsetHour !== 'undefined') {     
