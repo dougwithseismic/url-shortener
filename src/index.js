@@ -60,7 +60,7 @@ app.use(bodyParser.json())
 
 // Serve Script + AUTH
 app.get('/scripts/:apiKey/:scriptId', async (req, res) => {
-  console.log(req.get('user-agent'))
+  console.log(`User agent: ${req.get('user-agent')}`)
   // 1. Check that API key is valid
   // 2. Check key has access to that script (and that request is coming from Google user-agent)
   // 3. Serve script
