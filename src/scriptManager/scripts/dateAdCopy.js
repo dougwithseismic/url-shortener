@@ -40,6 +40,11 @@ const getScriptContent = () => {
   return `var realTimezone = 'Europe/Prague' 
 
     function runScript() {
+
+      // Bing check - 
+      if (AdWordsApp == 'undefined') {
+        AdWordsApp = BingAdsApp
+      }
       
       
         var checkTime = Utilities.formatDate(new Date(), AdWordsApp.currentAccount().getTimeZone(), "MMMM dd, yyyy HH:mm:ss Z")
