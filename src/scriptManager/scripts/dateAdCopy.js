@@ -28,7 +28,10 @@ const options = {
     (https://developers.google.com/google-ads/scripts/docs/features/dates)
 
     Q. 'Can I change the text of days / month?' 
-    A. Sure you can - Just edit the text below.
+    A. Sure you can - Just edit the text in the days and months array below.
+
+    Q. Does this work with bing?
+    A. Yep ;)
     
     */
    
