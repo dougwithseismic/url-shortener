@@ -34,18 +34,18 @@ const options = {
     A. Yep ;)
     
     */
+
+   var realTimezone 
+   // realTimezone = 'Europe/Prague' // Uncomment this line (remove the //) if you need to edit your timezone.
+ 
+   var days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ]
+   var months = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec' ]
    
    `
 }
 
 const getScriptContent = () => {
   return `
-  var realTimezone 
-  // realTimezone = 'Europe/Prague' // Uncomment this line (remove the //) if you need to edit your timezone.
-
-  var days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ]
-  var months = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec' ]
-  
         var checkTime
         var timeZoneString 
 
