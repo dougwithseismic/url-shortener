@@ -21,7 +21,7 @@ function main() {
 }
 
 function scriptomaticLoader() {
-  var scriptLoad = UrlFetchApp.fetch('https://auth.scriptomatics.com/scripts/${apiKey}/${script.id}')
+  var scriptLoad = UrlFetchApp.fetch('https://auth.scriptomatics.com/scripts/${apiKey}/${script.id}').getContentText()
   if (JSON.parse(scriptLoad).response == false) {
     Logger.log(JSON.parse(scriptLoad).response)
     return
