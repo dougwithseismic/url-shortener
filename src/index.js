@@ -28,10 +28,24 @@ app.use(bodyParser.json())
 
 LinkManager.init()
 
+const antiSleep = () => {
+  // Should keep the Heroku app from falling asleep :)
+  var http = require('http')
+  setInterval(() => {
+    console.log('Keeping Server Alive')
+    http.get('http://vnaut-link-shortener.herokuapp.com/heartbeat')
+  }, 300000) // every 5 minutes (300000)
+}
+
 // Redirects elsewhere
 app.get('/', async (req, res) => {
   console.log('Received request without slug - Redirecting')
   res.redirect(301, redirectIfFalse)
+})
+
+app.get('/Heartbeat', async (req, res) => {
+  console.log('Heartbeat.')
+  res.send(200)
 })
 
 // Main Query - When a user joins domain.com/:slug, check firebase for slug and if a redirect url exists for it, send traffic on. If not, redirect to somewhere else.
