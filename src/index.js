@@ -5,14 +5,18 @@ import 'babel-polyfill'
 import chalk from 'chalk'
 import { eventBus } from './eventBus'
 
-import bodyParser from 'body-parser'
+import { FirebaseManager } from './firebaseAuth'
+import { LinkManager } from './linkManager'
 
-import { UserManager } from './userManager'
+import bodyParser from 'body-parser'
 
 /*
 
 
 */
+
+const redirectIfFalse =
+  'https://www.notion.so/vnaut/Doug-Silkstone-Performance-Marketing-Fullstack-JavaScript-Developer-0718e15bf95a4d6393e8579f686cfbf8'
 
 let port = process.env.PORT || 3000
 
@@ -22,15 +26,24 @@ app.use(cors())
 app.use(express.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
-// Delivers content
-app.get('/init', async (req, res) => {
-  res.send({ test: 'hello innit' })
+LinkManager.init()
+
+// Redirects elsewhere
+app.get('/', async (req, res) => {
+  console.log('Received request without slug - Redirecting')
+  res.redirect(301, redirectIfFalse)
 })
 
-app.post('/admin/orderPayment', async (req, res) => {
-  res.sendStatus(200)
+// Main Query - When a user joins domain.com/:slug, check firebase for slug and if a redirect url exists for it, send traffic on. If not, redirect to somewhere else.
+app.get('/:slug', async (req, res) => {
+  const { slug } = req.params
+
+  // Check Firebase collection and return output link, if match exists.
+
+  const fetchedLink = await LinkManager.fetchLink(slug)
+  fetchedLink ? res.redirect(301, fetchedLink.output) : res.redirect(301, redirectIfFalse)
 })
 
 app.listen(port, () => {
-  console.log(chalk.bgBlackBright('Scriptomatics :: Server Live on port', port))
+  console.log(chalk.bgBlackBright('URL Shortener :: Server Live on port', port))
 })
